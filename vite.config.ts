@@ -24,5 +24,10 @@ export default {
         ]
       }
     })
-  ]
+  ],
+
+  define: {
+    'process.env': {},
+    global: 'window',
+  }
 }

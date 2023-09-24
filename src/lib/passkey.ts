@@ -18,8 +18,10 @@ import {
   configureEnvironment,
 } from "@fun-xyz/core";
 import { goerli } from "viem/chains";
-import { encodeFunctionData, toHex } from "viem";
+import { encodeFunctionData, toHex, Chain } from "viem";
 import { TypedDataField } from "@ethersproject/abstract-signer";
+import { IglooNFTABI } from "./temp-abi";
+import { NFTContractAbi } from "./onchain/MemeWarNft";
 
 const IGLOONFT_TOKEN_GORLI_CONTRACT_ADDRESS =
   "0x799e75059126E6DA27A164d1315b1963Fb82c44F";
@@ -87,7 +89,7 @@ export class Passkey {
   public async getSessionSigs(
     pkpPublicKey: string,
     authData: AuthMethod,
-    chain: string
+    chain: Chain
   ): Promise<SessionSigsMap> {
     await this.litNodeClient.connect();
 
@@ -104,14 +106,16 @@ export class Passkey {
         pkpPublicKey,
         expiration: params.expiration,
         resources: params.resources,
-        chainId: 5,
+        chainId: chain.id,
       });
       return resp.authSig;
     };
 
+    console.log("Chain", chain.name, chain);
+
     const sessionSigs = await this.litNodeClient.getSessionSigs({
       expiration: DEFAULT_EXP,
-      chain: chain,
+      chain: chain.name,
       resourceAbilityRequests: [
         {
           resource: new LitActionResource("*"),
@@ -128,13 +132,14 @@ export class Passkey {
   }
 
   public async createPkpEthersWallet(
-    pkpPublicKey: string
+    pkpPublicKey: string,
+    chain: Chain
   ): Promise<PKPEthersWallet> {
     if (this.sessionSig === undefined) {
       throw new Error("sessionSig is undefined");
     }
     const config: GlobalEnvOption = {
-      chain: "5",
+      chain: chain.id,
       gasSponsor: {
         sponsorAddress: "0x175C5611402815Eba550Dad16abd2ac366a63329",
       },
@@ -151,23 +156,16 @@ export class Passkey {
     return pkpWallet;
   }
 
-  public async sendUserOperation(): Promise<string> {
-    if (
-      this.pkpPublicKey == undefined ||
-      this.pkpEthAddress == undefined ||
-      this.sessionSig == undefined
-    ) {
-      console.log("pkpPublicKey", this.pkpPublicKey);
-      console.log("pkpEthAddress", this.pkpEthAddress);
-      console.log("sessionSig", this.sessionSig);
-
-      throw new Error(
-        "authenticatedResponse is undefined or has no eth address"
-      );
-    }
+  public async sendUserOperation(params: {
+    pkpPublicKey: string;
+    pkpEthAddress: string;
+    sessionSigsMap: SessionSigsMap;
+    chain: Chain,
+  }): Promise<string> {
 
     const pkpWallet = (await this.createPkpEthersWallet(
-      this.pkpPublicKey
+      params.pkpPublicKey,
+      params.chain
     )) as PKPEthersWallet;
 
     if (pkpWallet === undefined) {
@@ -178,13 +176,12 @@ export class Passkey {
     const authId = await auth.getUserId();
     const funWallet = new FunWallet({
       users: [{ userId: await auth.getUserId() }],
-      uniqueId: await auth.getWalletUniqueId(5),
+      uniqueId: await auth.getWalletUniqueId(),
     });
     const address = await funWallet.getAddress();
 
     const data = encodeFunctionData({
-      // TODO: Import our abi
-      // abi: IglooNFTABI.abi,
+      abi: NFTContractAbi.abi,
       functionName: "safeMint",
       args: [address],
     });

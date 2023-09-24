@@ -6,6 +6,8 @@ import { globals } from '../lib/globals'
 export const SignInScreen = cc(function() {
 
   async function signIn() {
+
+    // TODO: Try/catch
     await auth.signIn()
     if (auth.status.name === 'signed-in') {
       m.route.set(globals.redirectBackTo)

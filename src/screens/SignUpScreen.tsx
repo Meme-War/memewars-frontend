@@ -5,8 +5,11 @@ import * as auth from '../lib/auth'
 export const SignUpScreen = cc(function() {
 
   let creating = false
+  let username = 'abc123'
 
   async function signUp() {
+    await auth.signUp(username)
+    m.route.set('/sign-in')
   }
 
   return () => {
@@ -21,12 +24,17 @@ export const SignUpScreen = cc(function() {
         <input
           type="text"
           class="mt-3 px-2 py-1 border border-prim-950"
+          value={username}
+          oninput={(e: any) => {
+            username = e.target.value
+          }}
         />
 
         <button
           class={`mt-2 py-2 rounded-sm bg-prim-700 text-white ${
             creating ? 'animate-pulse' : ''
           }`}
+          onclick={signUp}
         >
           {creating ? 'Creating...' : 'Create Account'}
         </button>
