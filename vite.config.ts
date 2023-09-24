@@ -6,8 +6,8 @@ export default {
     VitePWA({
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'MemeWars.Army - Mint ALL the NFTs!',
-        short_name: 'MemeWars',
+        name: 'MemeWar.Army - Mint ALL the NFTs!',
+        short_name: 'MemeWar',
         description: 'do it',
         theme_color: '#ffffff',
         icons: [
