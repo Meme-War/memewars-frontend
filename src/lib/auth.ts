@@ -6,6 +6,7 @@ export type User = {
   pkpPublicKey: string
   pkpEthAddress: string
   sessionSigsMap: SessionSigsMap
+  sessionExpiresAt: number
 }
 
 export type AuthStatus =
@@ -27,6 +28,9 @@ export function checkStatus() {
   let user: User | null = null
   try {
     user = JSON.parse(localStorage.getItem('user') as any)
+    if (!user?.sessionExpiresAt || Date.now() > user.sessionExpiresAt) {
+      user = null
+    }
   }
   catch {
     // ignore
@@ -63,7 +67,7 @@ export function signIn() {
     const [{ publicKey, ethAddress }] = results
     console.log("Fetched", publicKey, ethAddress)
 
-    const sessionSigsMap = await passkey.getSessionSigs(publicKey, authMethod, baseGoerli)
+    const {sessionExpiresAt, sessionSigsMap} = await passkey.getSessionSigs(publicKey, authMethod, baseGoerli)
     console.log("sessionSigsMap", sessionSigsMap)
 
     const user: User = {
@@ -71,6 +75,7 @@ export function signIn() {
       pkpPublicKey: publicKey,
       pkpEthAddress: ethAddress,
       sessionSigsMap,
+      sessionExpiresAt,
     }
 
     localStorage.setItem('user', JSON.stringify(user))

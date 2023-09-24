@@ -28,9 +28,7 @@ export type { SessionSigsMap }
 const IGLOONFT_TOKEN_GORLI_CONTRACT_ADDRESS =
   "0x799e75059126E6DA27A164d1315b1963Fb82c44F";
 
-export const DEFAULT_EXP = new Date(
-  Date.now() + 1000 * 60 * 60 * 24 * 7
-).toISOString();
+export const DEFAULT_EXP_TIME = 1000 * 60 * 60 * 24 * 7
 
 export class Passkey {
   private litAuthClient: LitAuthClient;
@@ -92,7 +90,7 @@ export class Passkey {
     pkpPublicKey: string,
     authData: AuthMethod,
     chain: Chain
-  ): Promise<SessionSigsMap> {
+  ) {
     await this.litNodeClient.connect();
 
     if (this.pkpPublicKey == undefined || this.pkpEthAddress == undefined) {
@@ -115,8 +113,11 @@ export class Passkey {
 
     console.log("Chain", chain.name, chain);
 
-    const sessionSigs = await this.litNodeClient.getSessionSigs({
-      expiration: DEFAULT_EXP,
+    const sessionExpiresAt = Date.now() + DEFAULT_EXP_TIME;
+    const expiration = new Date(sessionExpiresAt).toISOString();
+
+    const sessionSigsMap = await this.litNodeClient.getSessionSigs({
+      expiration,
       chain: chain.name,
       resourceAbilityRequests: [
         {
@@ -128,9 +129,9 @@ export class Passkey {
       authNeededCallback: authNeededCallback,
     });
 
-    this.sessionSig = sessionSigs;
+    this.sessionSig = sessionSigsMap;
 
-    return sessionSigs;
+    return {sessionSigsMap, sessionExpiresAt};
   }
 
   public async createPkpEthersWallet(
