@@ -12,7 +12,10 @@ function SignedIn(Component: any) {
         await auth.syncStatusPromise
       }
       if (auth.status.name === 'signed-in') {
-        return Component
+        const user = auth.status.user
+        return {
+          view: () => m(Component, { user })
+        }
       }
       else {
         globals.redirectBackTo = m.route.get()

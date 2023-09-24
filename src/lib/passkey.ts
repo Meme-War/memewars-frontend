@@ -23,6 +23,8 @@ import { TypedDataField } from "@ethersproject/abstract-signer";
 import { IglooNFTABI } from "./temp-abi";
 import { NFTContractAbi } from "./onchain/MemeWarNft";
 
+export type { SessionSigsMap }
+
 const IGLOONFT_TOKEN_GORLI_CONTRACT_ADDRESS =
   "0x799e75059126E6DA27A164d1315b1963Fb82c44F";
 

@@ -14,7 +14,7 @@ export const SignUpScreen = cc(function() {
 
   return () => {
 
-    return <div class="h-full flex-center bg-mainbg">
+    return <div class="h-full flex-center mainbg">
       <div class="px-4 py-6 max-w-xs flex flex-col justify-stretch">
 
         <h1 class="text-2xl font-mono">Choose your name</h1>

@@ -1,10 +1,11 @@
-import { Passkey } from "./passkey"
+import { Passkey, SessionSigsMap } from "./passkey"
 import { baseGoerli } from 'viem/chains'
 
-type User = {
+export type User = {
   username: string
   pkpPublicKey: string
   pkpEthAddress: string
+  sessionSigsMap: SessionSigsMap
 }
 
 export type AuthStatus =
@@ -18,24 +19,35 @@ export let status: AuthStatus = { name: 'init', syncing: false }
 
 export let syncStatusPromise: Promise<AuthStatus> = Promise.resolve(status)
 
-const MOCK_DELAY = 100
-
 const passkey = new Passkey()
 
 export function checkStatus() {
   if (status.syncing) return syncStatusPromise
 
+  let user: User | null = null
+  try {
+    user = JSON.parse(localStorage.getItem('user') as any)
+  }
+  catch {
+    // ignore
+  }
+
   return syncStatusPromise = (async () => {
     status.syncing = true
 
-    status = { name: 'signed-out', syncing: false }
-    // status = { name: 'signed-in', syncing: false, user: {} }
+    status = user
+      ? { name: 'signed-in', syncing: false, user }
+      : { name: 'signed-out', syncing: false }
+
     return status
   })()
 }
 
 export function signIn() {
   if (status.syncing) return syncStatusPromise
+
+  // TODO: Load from kv
+  const username = status.name === 'signed-up' ? status.username : '<unknown>'
 
   status = { name: 'signing-in', syncing: true }
 
@@ -52,21 +64,16 @@ export function signIn() {
     console.log("Fetched", publicKey, ethAddress)
 
     const sessionSigsMap = await passkey.getSessionSigs(publicKey, authMethod, baseGoerli)
+    console.log("sessionSigsMap", sessionSigsMap)
 
-    const tx = await passkey.sendUserOperation({
+    const user: User = {
+      username,
       pkpPublicKey: publicKey,
       pkpEthAddress: ethAddress,
       sessionSigsMap,
-      chain: baseGoerli,
-    })
-    console.log("tx", tx)
-
-    const user: User = {
-      // TODO: Load from kv
-      username: '???',
-      pkpPublicKey: publicKey,
-      pkpEthAddress: ethAddress,
     }
+
+    localStorage.setItem('user', JSON.stringify(user))
 
     status = { name: 'signed-in', syncing: false, user }
     return status
@@ -89,4 +96,12 @@ export function signUp(username: string) {
     status = { name: 'signed-up', syncing: false, username }
     return status
   })()
+}
+
+export function signOut() {
+  if (status.syncing) return syncStatusPromise
+
+  status = { name: 'signed-out', syncing: false }
+
+  localStorage.removeItem('user')
 }

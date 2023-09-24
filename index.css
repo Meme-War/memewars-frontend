@@ -8,3 +8,11 @@
   align-items: center;
   flex-direction: column;
 }
+
+.mainbg {
+  background-color: #A8CCC4;
+}
+
+.headerbg {
+  background-color: #6F9288;
+}

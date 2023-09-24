@@ -65,7 +65,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        'mainbg': '#A8CCC4',
         ...exportedColors.map(c => c.swatches).reduce((a,b) => a.concat(b)).reduce((out, row) => {
           const pieces = row.name.split('-')
           const colorName = pieces.slice(0, pieces.length-1).join('-')
