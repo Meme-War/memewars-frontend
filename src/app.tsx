@@ -53,9 +53,7 @@ auth.checkStatus();
 m.route.prefix = "";
 m.route(document.getElementById("app")!, "/", {
   "/": SignedIn(MemeList),
-
   "/create": SignedIn(CreateNFT),
-
   "/sign-up": SignedOut(SignUpScreen),
   "/sign-in": {
     async onmatch() {

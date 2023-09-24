@@ -3,8 +3,9 @@ import { cc } from "mithril-cc";
 
 import { createPublicClient, http } from "viem";
 import { baseGoerli } from "viem/chains";
-import { User } from "../lib/auth";
 import { UserHeader } from "./common/UserHeader";
+import { User } from "../lib/auth";
+import { TabBar } from "../components/TabBar";
 
 // 2. Set up your client with desired chain & transport.
 const client = createPublicClient({
@@ -52,17 +53,20 @@ export const MemeList = cc<Attrs>(function () {
 
   return ({ user }) => {
     return (
-      <div class="h-screen mainbg">
+      <div class="h-screen mainbg flex flex-col">
         {m(UserHeader, { user })}
 
-        <div class="max-w-lg mx-auto">
-          <h1 class="text-xl font-bold">Most popular</h1>
-          <div class="p-4 space-y-2">
-            {collections.map((item) => {
-              return m(RankingCell, { user, item });
-            })}
+        <div class="w-full flex-1 max-w-md mx-auto">
+          <div>
+            <h1 class="text-xl font-bold">Most popular</h1>
+            <div class="p-4 space-y-2">
+              {collections.map((item) => {
+                return m(RankingCell, { user, item });
+              })}
+            </div>
           </div>
         </div>
+        <div class="w-full max-w-md self-center">{m(TabBar)}</div>
       </div>
     );
   };
