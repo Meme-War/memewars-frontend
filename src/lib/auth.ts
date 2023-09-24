@@ -1,6 +1,8 @@
+type User = {}
+
 export type AuthStatus =
 | { name: 'init', syncing: boolean }
-| { name: 'signed-in', syncing: boolean }
+| { name: 'signed-in', syncing: boolean, user: User }
 | { name: 'signed-out', syncing: boolean }
 | { name: 'signing-in', syncing: boolean }
 
@@ -16,8 +18,8 @@ export function checkStatus() {
   return syncStatusPromise = (async () => {
     status.syncing = true
     await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
-    status = { name: 'signed-out', syncing: false }
-    // status = { name: 'signed-in', syncing: false }
+    // status = { name: 'signed-out', syncing: false }
+    status = { name: 'signed-in', syncing: false, user: {} }
     return status
   })()
 }

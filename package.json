@@ -19,6 +19,7 @@
   "dependencies": {
     "@types/mithril": "^2.2.1",
     "mithril": "^2.2.2",
-    "mithril-cc": "^0.11.2"
+    "mithril-cc": "^0.11.2",
+    "viem": "^1.12.1"
   }
 }

@@ -1,15 +1,9 @@
 import m from 'mithril'
-import {cc} from 'mithril-cc'
 import * as auth from './lib/auth'
 import { SignInScreen } from './screens/SignInScreen'
 import { SignUpScreen } from './screens/SignUpScreen'
 import { globals } from './lib/globals'
-
-const HomeScreen = cc(function() {
-  return () => {
-    return <div class="">Hello world!</div>
-  }
-})
+import { MemeList } from './screens/MemeList'
 
 function SignedIn(Component: any) {
   return {
@@ -56,7 +50,7 @@ function SignedOut(Component: any) {
 auth.checkStatus()
 m.route.prefix = ''
 m.route(document.getElementById('app')!, '/', {
-  '/': SignedIn(HomeScreen),
+  '/': SignedIn(MemeList),
   '/sign-up': SignedOut(SignUpScreen),
   '/sign-in': {
     async onmatch() {
