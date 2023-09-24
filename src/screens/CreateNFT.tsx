@@ -3,6 +3,7 @@ import { cc } from "mithril-cc";
 import { User } from "../lib/auth";
 import { UserHeader } from "./common/UserHeader";
 import * as auth from '../lib/auth'
+import { TabBar } from "../components/TabBar";
 
 type Attrs = {
   user: User;
@@ -40,10 +41,10 @@ export const CreateNFT = cc<Attrs>(function () {
 
   return ({ user }) => {
     return (
-      <div class="h-screen mainbg">
+      <div class="h-screen mainbg flex flex-col">
         {m(UserHeader, { user })}
 
-        <div class="p-4 max-w-md mx-auto">
+        <div class="p-4 w-full flex-1 max-w-md mx-auto">
           {!image ? (
             <div>
               <button
@@ -144,6 +145,8 @@ export const CreateNFT = cc<Attrs>(function () {
             </div>
           )}
         </div>
+
+        <div class="w-full max-w-md self-center">{m(TabBar)}</div>
       </div>
     );
   };
