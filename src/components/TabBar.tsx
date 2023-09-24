@@ -7,7 +7,12 @@ export const TabBar = cc<TabBarAttrs>(function () {
   return ({}) => {
     return (
       <div class="flex flex-row">
-        <div class="flex-1 text-center text-black text-sm font-normal font-['Audiowide'] border border-black">
+        <button
+          class="flex-1 text-center text-black text-sm font-normal font-['Audiowide'] border border-black"
+          onclick={() => {
+            m.route.set("/");
+          }}
+        >
           <div class="flex flex-col justify-center items-center">
             <svg
               width={32}
@@ -26,8 +31,13 @@ export const TabBar = cc<TabBarAttrs>(function () {
             </svg>
           </div>
           PROFILE
-        </div>
-        <div class="flex-1 text-center text-black text-sm font-normal font-['Audiowide'] border border-black">
+        </button>
+        <button
+          class="flex-1 text-center text-black text-sm font-normal font-['Audiowide'] border border-black"
+          onclick={() => {
+            m.route.set("/create");
+          }}
+        >
           <div class="flex flex-col justify-center items-center">
             <svg
               width={32}
@@ -46,8 +56,13 @@ export const TabBar = cc<TabBarAttrs>(function () {
             </svg>
           </div>
           CREATE
-        </div>
-        <div class="flex-1 text-center text-black text-sm font-normal font-['Audiowide'] border border-black ">
+        </button>
+        <button
+          class="flex-1 text-center text-black text-sm font-normal font-['Audiowide'] border border-black"
+          onclick={() => {
+            m.route.set("/trending");
+          }}
+        >
           <div class="flex flex-col justify-center items-center">
             <svg
               width={32}
@@ -66,7 +81,7 @@ export const TabBar = cc<TabBarAttrs>(function () {
             </svg>
           </div>
           TRENDING
-        </div>
+        </button>
       </div>
     );
   };
