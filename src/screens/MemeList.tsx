@@ -3,7 +3,8 @@ import { cc } from "mithril-cc";
 
 import { createPublicClient, http } from "viem";
 import { baseGoerli } from "viem/chains";
-import { User, signOut } from "../lib/auth";
+import { User } from "../lib/auth";
+import { UserHeader } from "./common/UserHeader";
 
 // 2. Set up your client with desired chain & transport.
 const client = createPublicClient({
@@ -52,20 +53,7 @@ export const MemeList = cc<Attrs>(function () {
   return ({ user }) => {
     return (
       <div class="h-screen mainbg">
-        <div class="p-3 flex headerbg">
-          <div>memewar.army</div>
-          <div class="flex-1"></div>
-          <div>
-            <button
-              onclick={async () => {
-                await signOut();
-                m.route.set("/sign-in");
-              }}
-            >
-              {user.username}
-            </button>
-          </div>
-        </div>
+        {m(UserHeader, { user })}
 
         <div class="max-w-lg mx-auto">
           <h1 class="text-xl font-bold">Most popular</h1>
