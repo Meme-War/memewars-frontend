@@ -6,6 +6,7 @@ import { baseGoerli } from "viem/chains";
 import { UserHeader } from "./common/UserHeader";
 import { User } from "../lib/auth";
 import { TabBar } from "../components/TabBar";
+import { supabase } from "../lib/supabase";
 
 // 2. Set up your client with desired chain & transport.
 const client = createPublicClient({
@@ -27,29 +28,31 @@ type Attrs = {
   user: User;
 };
 export const MemeList = cc<Attrs>(function () {
-  let blockNumber = 0n;
+  let collections: RankingItem[] = [];
 
   this.oncreate(async () => {
-    blockNumber = await client.getBlockNumber();
+    const res = await supabase
+      .from("struct_sigs")
+      .select("*")
+      .limit(10)
+      .order("mint_count", { ascending: false });
+
+    console.log("collections", res);
+
+    collections = res.data!.map((item) => {
+      return {
+        imageUrl: item.uri,
+        mintCount: item.mint_count,
+        creatorName: item.creator_name,
+        startedAt: new Date(item.started_at).getTime(),
+        tokenId: item.token_id,
+        address: item.address,
+        price: 10n ** 15n,
+      };
+    });
+
     m.redraw();
   });
-
-  let collections: RankingItem[] = [
-    {
-      imageUrl: "http://placekitten.com/300/300",
-      mintCount: 43,
-      creatorName: "jimmy",
-      startedAt: Date.now() - 1000 * 60 * 60 * 7,
-      price: 10n ** 15n,
-    },
-    {
-      imageUrl: "http://placekitten.com/300/300",
-      mintCount: 33,
-      creatorName: "kam",
-      startedAt: Date.now() - 1000 * 60 * 60 * 3,
-      price: 10n ** 15n,
-    },
-  ];
 
   return ({ user }) => {
     return (
@@ -139,7 +142,7 @@ const RankingCell = cc<RankingCellAttrs>(function () {
               />
             </svg>
             <span class="ml-2">
-              {timeRemaining(item.startedAt, TWELVE_HOURS)} ETH
+              {timeRemaining(item.startedAt, TWELVE_HOURS)}
             </span>
           </div>
         </div>
@@ -217,13 +220,13 @@ function timeRemaining(from: number, timeLimit: number) {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
   if (days > 0) {
-    return `${days}d`;
+    return `${days}d left`;
   }
   if (hours > 0) {
-    return `${hours}h`;
+    return `${hours}h left`;
   }
   if (minutes > 0) {
-    return `${minutes}m`;
+    return `${minutes}m left`;
   }
-  return `${seconds}s`;
+  return `${seconds}s left`;
 }
