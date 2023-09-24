@@ -5,7 +5,7 @@ import * as auth from '../lib/auth'
 export const SignUpScreen = cc(function() {
 
   let creating = false
-  let username = 'abc123'
+  let username = ''
 
   async function signUp() {
     await auth.signUp(username)
