@@ -17,7 +17,16 @@
     "vite-plugin-pwa": "^0.16.5"
   },
   "dependencies": {
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@fun-xyz/core": "^0.4.8",
+    "@lit-protocol/auth-helpers": "^2.2.54",
+    "@lit-protocol/constants": "^2.2.54",
+    "@lit-protocol/lit-auth-client": "^2.2.54",
+    "@lit-protocol/lit-node-client": "^2.2.54",
+    "@lit-protocol/pkp-ethers": "^2.2.54",
+    "@lit-protocol/types": "^2.2.54",
     "@types/mithril": "^2.2.1",
+    "ethers": "^6.7.1",
     "mithril": "^2.2.2",
     "mithril-cc": "^0.11.2",
     "viem": "^1.12.1"

@@ -1,3 +1,5 @@
+import { Passkey } from "./passkey"
+
 type User = {}
 
 export type AuthStatus =
@@ -12,12 +14,16 @@ export let syncStatusPromise: Promise<AuthStatus> = Promise.resolve(status)
 
 const MOCK_DELAY = 100
 
+const passkey = new Passkey()
+
 export function checkStatus() {
   if (status.syncing) return syncStatusPromise
 
   return syncStatusPromise = (async () => {
     status.syncing = true
-    await new Promise(resolve => setTimeout(resolve, MOCK_DELAY))
+
+    // TODO: CHECK AUTH STATUS
+
     // status = { name: 'signed-out', syncing: false }
     status = { name: 'signed-in', syncing: false, user: {} }
     return status
