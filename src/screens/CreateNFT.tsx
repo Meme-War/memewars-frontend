@@ -2,12 +2,13 @@ import m from "mithril";
 import { cc } from "mithril-cc";
 import { User } from "../lib/auth";
 import { UserHeader } from "./common/UserHeader";
-import * as auth from '../lib/auth'
+import * as auth from "../lib/auth";
 import { TabBar } from "../components/TabBar";
 
 type Attrs = {
   user: User;
 };
+
 export const CreateNFT = cc<Attrs>(function () {
   let image: FileReader["result"] = null;
   let imageFile: File | null = null;
@@ -28,12 +29,12 @@ export const CreateNFT = cc<Attrs>(function () {
   async function createMeme() {
     // Ensure session is still valid
     let status = await auth.checkStatus();
-    if (status.name !== 'signed-in') {
-      status = await auth.signIn()
+    if (status.name !== "signed-in") {
+      status = await auth.signIn();
     }
-    if (status.name !== 'signed-in') {
-      alert('weird')
-      return
+    if (status.name !== "signed-in") {
+      alert("weird");
+      return;
     }
 
     // Upload image
