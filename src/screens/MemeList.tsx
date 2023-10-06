@@ -2,7 +2,7 @@ import m from "mithril";
 import { cc } from "mithril-cc";
 
 import { createPublicClient, http } from "viem";
-import { goerli } from "viem/chains";
+import { baseGoerli } from "viem/chains";
 import { UserHeader } from "./common/UserHeader";
 import { User } from "../lib/auth";
 import { TabBar } from "../components/TabBar";
@@ -10,7 +10,7 @@ import { supabase } from "../lib/supabase";
 
 // 2. Set up your client with desired chain & transport.
 const client = createPublicClient({
-  chain: goerli,
+  chain: baseGoerli,
   transport: http(),
 });
 
